@@ -1,5 +1,9 @@
 const goblinImage = require('../img/goblin.png');
 
+const INITIAL_DELAY = 500;
+const MOVE_INTERVAL = 1000;
+const MAX_MISSES = 5;
+
 class GoblinGame {
     constructor(boardSize = 4) {
         this.boardSize = boardSize;
@@ -14,7 +18,6 @@ class GoblinGame {
     }
 
     init() {
-        console.log('Game initializing...');
         this.createBoard();
         this.createGoblin();
         this.startGame();
@@ -36,10 +39,9 @@ class GoblinGame {
             cell.classList.add('cell');
             cell.dataset.index = i;
             cell.addEventListener('click', () => this.onCellClick(i));
-            this.board.appendChild(cell);
+            this.board.append(cell);
             this.cells.push(cell);
         }
-        console.log('Created', this.cells.length, 'cells');
     }
 
     createGoblin() {
@@ -51,9 +53,6 @@ class GoblinGame {
         this.goblinElement.style.height = '100%';
         this.goblinElement.style.objectFit = 'cover';
         this.goblinElement.style.borderRadius = '8px';
-
-        this.goblinElement.onload = () => console.log('Goblin image loaded');
-        this.goblinElement.onerror = () => console.error('Failed to load goblin image');
     }
 
     startGame() {
@@ -61,13 +60,13 @@ class GoblinGame {
             if (!this.isGameOver && this.cells.length > 0) {
                 this.moveGoblin();
             }
-        }, 500);
+        }, INITIAL_DELAY);
 
         this.intervalId = setInterval(() => {
             if (!this.isGameOver && this.cells.length > 0) {
                 this.moveGoblin();
             }
-        }, 1000);
+        }, MOVE_INTERVAL);
     }
 
     moveGoblin() {
@@ -118,7 +117,7 @@ class GoblinGame {
 
         this.updateScore();
 
-        if (this.missCount >= 5) {
+        if (this.missCount >= MAX_MISSES) {
             this.gameOver();
         }
     }
